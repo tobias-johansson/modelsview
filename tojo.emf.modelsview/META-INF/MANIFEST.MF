@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Modelsview
+Bundle-SymbolicName: tojo.emf.modelsview;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: tojo.emf.modelsview.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.sphinx.emf;bundle-version="0.7.0",
+ org.eclipse.sphinx.emf.ui;bundle-version="0.7.0",
+ org.scala-ide.scala.library
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

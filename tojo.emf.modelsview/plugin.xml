@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="tojo.emf.modelsview"
+            name="Model">
+      </category>
+      <view
+            category="tojo.emf.modelsview"
+            class="tojo.emf.modelsview.views.ModelRegistryView"
+            icon="icons/sample.gif"
+            id="tojo.emf.modelsview.views.ModelRegistryView"
+            name="Model Registry">
+      </view>
+   </extension>
+
+</plugin>
