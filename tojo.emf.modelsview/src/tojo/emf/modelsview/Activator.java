@@ -2,6 +2,8 @@ package tojo.emf.modelsview;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -19,6 +21,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	static String apa = "APA";
 	
 	/**
 	 * The constructor
@@ -53,33 +57,48 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 	
-	public Image getFileImage(String extension) {
-		ImageRegistry registry = getDefault().getImageRegistry();
-		String id = "@FILE@" + extension;
-		Image image = registry.get(id);
-		if (image == null) {
-			ImageDescriptor descriptor = PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor("test."+extension);
-			if (descriptor == null) return null;
-			registry.put(id, descriptor);
-			return registry.get(id);
-		} else {
-			return image;
+	public Image getFileImage(IFile file) {
+		try {	
+			ImageRegistry registry = getDefault().getImageRegistry();
+
+			String extension = file.getFileExtension();
+			String contentType = file.getContentDescription().getContentType().getId();
+
+			String id = extension + "-" + contentType;
+			Image image = registry.get(id);
+			if (image == null) {
+				ImageDescriptor descriptor = 
+						PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(
+								file.getName(), file.getContentDescription().getContentType());
+				if (descriptor == null) return null;
+				registry.put(id, descriptor);
+				return registry.get(id);
+			} else {
+				return image;
+			}
+		} catch (CoreException e) {
+			return null;
 		}
+	}
+	
+	public ImageDescriptor getImageDescriptor(String id) {
+		ImageRegistry registry = getDefault().getImageRegistry();
+		ImageDescriptor descriptor = registry.getDescriptor(id);
+		if (descriptor != null) return descriptor;
+		URL url = getDefault().getBundle().getEntry("icons/" + id);
+		if (url == null) return null;
+		descriptor = ImageDescriptor.createFromURL(url);
+		if (descriptor == null) return null;
+		registry.put(id, descriptor);
+		return registry.getDescriptor(id);
 	}
 	
 	public Image getImage(String id) {
 		ImageRegistry registry = getDefault().getImageRegistry();
 		Image image = registry.get(id);
-		if (image == null) {
-			URL url = getDefault().getBundle().getEntry("icons/" + id);
-			if (url == null) return null;
-			ImageDescriptor descriptor = ImageDescriptor.createFromURL(url);
-			if (descriptor == null) return null;
-			registry.put(id, descriptor);
-			return registry.get(id);
-		} else {
-			return image;
-		}
+		if (image != null) return image;
+		getImageDescriptor(id);
+		return registry.get(id);
 	}
 	
 	@Override
